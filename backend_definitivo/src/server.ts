@@ -1,7 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import db from './config/db';
-import authRoutes from './router/auth.routes';
+import authRoutes from './router/auth';
 import empleadosRoutes from './router/RouterEmpleados';
 import rolesRoutes from './router/RouterRoles';
 import loguinRoutes from './router/RouterLoguin';
@@ -11,7 +11,7 @@ app.use(cors({ origin: true, credentials: true }));
 app.use(express.json());
 
 // Rutas de autenticación
-app.use('/auth', authRoutes);
+app.use('/api/auth', authRoutes);
 
 // Rutas de empleados
 app.use('/empleados', empleadosRoutes);

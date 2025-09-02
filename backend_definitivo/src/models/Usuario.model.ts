@@ -2,26 +2,38 @@ import { Table, Column, Model, DataType, PrimaryKey, AutoIncrement, Unique } fro
 
 @Table({ tableName: 'usuarios', timestamps: true })
 export class Usuario extends Model {
-    @PrimaryKey
-    @AutoIncrement
-    @Column(DataType.INTEGER)
-    id!: number;
+  @PrimaryKey
+  @AutoIncrement
+  @Column(DataType.INTEGER)
+  id!: number;
 
-    @Unique
-    @Column(DataType.STRING(100))
-    email!: string;
+  @Column(DataType.STRING(100))
+  nombre!: string;
 
-    @Column(DataType.STRING(500))
-    password!: string;
+  @Unique
+  @Column(DataType.STRING(100))
+  email!: string;
 
-    @Column(DataType.STRING(50))
-    rol!: string;
+  @Column(DataType.STRING(255))
+  password!: string;
 
-    @Column(DataType.STRING(100))
-    nombre!: string;
+  @Column({
+    type: DataType.ENUM('Admin', 'Vendedor', 'Inventario', 'Marketing'),
+    defaultValue: 'Vendedor'
+  })
+  rol!: 'Admin' | 'Vendedor' | 'Inventario' | 'Marketing';
 
-    @Column(DataType.BOOLEAN)
-    activo!: boolean;
+  @Column({
+    type: DataType.BOOLEAN,
+    defaultValue: true
+  })
+  estado!: boolean;
+
+  @Column(DataType.DATE)
+  createdAt!: Date;
+
+  @Column(DataType.DATE)
+  updatedAt!: Date;
 }
 
 export default Usuario;

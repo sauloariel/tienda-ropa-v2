@@ -1,84 +1,54 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
-import { AuthProvider } from './contexts/AuthContext';
-import ProtectedRoute from './components/ProtectedRoute';
-import RoleGuard from './components/RoleGuard';
-import Layout from './components/Layout';
-import RedirectToFirstModule from './components/RedirectToFirstModule';
+import PrivateRoute from './components/PrivateRoute';
+import RoleRoute from './components/RoleRoute';
+import Header from './components/Header';
 import Login from './pages/Login';
-import Unauthorized from './pages/Unauthorized';
-import POS from './pages/POS';
-import Productos from './pages/Productos';
-import Pedidos from './pages/Pedidos';
-import Clientes from './pages/Clientes';
-import Empleados from './pages/Empleados';
-import Ventas from './pages/Ventas';
-import Estadisticas from './pages/Estadisticas';
-import Marketing from './pages/Marketing';
+import Dashboard from './pages/Dashboard';
 
 export default function App() {
   return (
-    <AuthProvider>
+    <div className="min-h-screen bg-gray-50">
       <Routes>
-        <Route path="/login" element={<Login/>} />
-        <Route path="/unauthorized" element={<Unauthorized/>} />
-
-        {/* Rutas protegidas con Layout */}
-        <Route path="/" element={
-          <ProtectedRoute>
-            <Layout />
-          </ProtectedRoute>
-        }>
-          <Route path="pos" element={
-            <RoleGuard allow={['Admin','Vendedor']} ruta="/pos">
-              <POS />
-            </RoleGuard>
-          }/>
-
-          <Route path="productos" element={
-            <RoleGuard allow={['Admin','Inventario']} ruta="/productos">
-              <Productos />
-            </RoleGuard>
-          }/>
-
-          <Route path="pedidos" element={
-            <RoleGuard allow={['Admin','Vendedor','Marketing']} ruta="/pedidos">
-              <Pedidos />
-            </RoleGuard>
-          }/>
-
-          <Route path="clientes" element={
-            <RoleGuard allow={['Admin','Vendedor']} ruta="/clientes">
-              <Clientes />
-            </RoleGuard>
-          }/>
-
-          <Route path="empleados" element={
-            <RoleGuard allow={['Admin']} ruta="/empleados">
-              <Empleados />
-            </RoleGuard>
-          }/>
-
-          <Route path="ventas" element={
-            <RoleGuard allow={['Admin','Vendedor']} ruta="/ventas">
-              <Ventas />
-            </RoleGuard>
-          }/>
-
-          <Route path="estadisticas" element={
-            <RoleGuard allow={['Admin','Vendedor','Inventario','Marketing']} ruta="/estadisticas">
-              <Estadisticas />
-            </RoleGuard>
-          }/>
-
-          <Route path="marketing" element={
-            <RoleGuard allow={['Admin','Marketing']} ruta="/marketing">
-              <Marketing />
-            </RoleGuard>
-          }/>
-
-          <Route index element={<RedirectToFirstModule />} />
-        </Route>
+        {/* Ruta de login */}
+        <Route path="/login" element={<Login />} />
+        
+        {/* Ruta raíz - redirigir a dashboard */}
+        <Route path="/" element={<Navigate to="/dashboard" replace />} />
+        
+        {/* Rutas protegidas */}
+        <Route path="/dashboard" element={
+          <PrivateRoute>
+            <Header />
+            <Dashboard />
+          </PrivateRoute>
+        } />
+        
+        {/* Ejemplo de ruta con control de roles */}
+        <Route path="/admin-only" element={
+          <PrivateRoute>
+            <RoleRoute allowedRoles={['Admin']}>
+              <Header />
+              <div className="p-8">
+                <h1 className="text-2xl font-bold">Solo para Administradores</h1>
+                <p>Esta página solo es accesible para usuarios con rol Admin.</p>
+              </div>
+            </RoleRoute>
+          </PrivateRoute>
+        } />
+        
+        {/* Ejemplo de ruta para múltiples roles */}
+        <Route path="/vendedor-inventario" element={
+          <PrivateRoute>
+            <RoleRoute allowedRoles={['Vendedor', 'Inventario']}>
+              <Header />
+              <div className="p-8">
+                <h1 className="text-2xl font-bold">Vendedores e Inventario</h1>
+                <p>Esta página es accesible para Vendedores e Inventario.</p>
+              </div>
+            </RoleRoute>
+          </PrivateRoute>
+        } />
       </Routes>
-    </AuthProvider>
+    </div>
   );
 }
