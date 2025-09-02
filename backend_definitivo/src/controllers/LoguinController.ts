@@ -41,6 +41,16 @@ export const loginEmpleado = async (req: Request, res: Response) => {
       ]
     });
 
+    console.log('🔍 Debug login - Usuario encontrado:', usuario);
+    console.log('🔍 Debug login - loguinData:', loguinData ? 'Sí' : 'No');
+    if (loguinData) {
+      console.log('🔍 Debug login - ID:', loguinData.id_loguin);
+      console.log('🔍 Debug login - Empleado:', loguinData.empleado ? 'Sí' : 'No');
+      if (loguinData.empleado) {
+        console.log('🔍 Debug login - Estado empleado:', loguinData.empleado.estado);
+      }
+    }
+
     if (!loguinData) {
       return res.status(401).json({
         success: false,
