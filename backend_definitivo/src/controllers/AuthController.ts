@@ -53,7 +53,7 @@ export const login = async (req: Request, res: Response) => {
       rol: usuario.rol
     };
 
-    const token = jwt.sign(payload, JWT_SECRET, { expiresIn: JWT_EXPIRES });
+    const token = jwt.sign(payload, JWT_SECRET, { expiresIn: '7d' });
 
     // Preparar respuesta del usuario (sin password)
     const usuarioResponse = {
